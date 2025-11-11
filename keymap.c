@@ -184,6 +184,15 @@ keymap_config_t keymap_config;
 uint8_t prev_layer = 0;
 uint8_t cur_layer = 0;
 
+layer_state_t layer_state_set_user(layer_state_t state) {
+    uint8_t new_layer = get_highest_layer(state);
+    if (new_layer != cur_layer) {
+        prev_layer = cur_layer;
+        cur_layer = new_layer;
+    }
+    return state;
+}
+
 bool switch_kvm_input(uint8_t pc_index) {
     bool nkro = keymap_config.nkro;
     keymap_config.nkro = false;
@@ -219,34 +228,27 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     if (record->event.pressed) {
         switch_kvm_input(KC_0);
         layer_move(prev_layer);
-        cur_layer = prev_layer;
     }
     return false;
     break;
     case ST_MACRO_1:
     if (record->event.pressed) {
         switch_kvm_input(KC_1);
-        prev_layer = cur_layer;
         layer_move(0);
-        cur_layer = get_highest_layer(biton16(layer_state));
     }
     return false;
     break;
     case ST_MACRO_2:
     if (record->event.pressed) {
         switch_kvm_input(KC_2);
-        prev_layer = cur_layer;
         layer_move(1);
-        cur_layer = get_highest_layer(biton16(layer_state));
     }
     return false;
     break;
     case ST_MACRO_3:
     if (record->event.pressed) {
         switch_kvm_input(KC_3);
-        prev_layer = cur_layer;
         layer_move(1);
-        cur_layer = get_highest_layer(biton16(layer_state));
     }
     return false;
     break;
@@ -260,7 +262,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     case ST_MACRO_5:
     if (record->event.pressed) {
       send_string("TEMP");
-      layer_move(cur_layer);
+      layer_move(prev_layer);
     }
     return false;
     break;
