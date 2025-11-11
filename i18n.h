@@ -1,0 +1,4 @@
+#define KC_PC_COPY LCTL(KC_C)
+#define KC_PC_PASTE LCTL(KC_V)
+#define KC_MAC_COPY LGUI(KC_C)
+#define KC_MAC_PASTE LGUI(KC_V)
